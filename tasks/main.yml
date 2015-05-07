@@ -1,0 +1,34 @@
+- name: install required packages
+  apt: name={{ item }} state=installed
+  with_items: consul_req_packages
+
+- name: fetch consul
+  get_url: url={{ consul_url }} dest=/tmp/{{ consul_package }} mode=0440
+
+- name: unzip and install consul
+  unarchive: src=/tmp/{{ consul_package }} dest=/usr/local/bin owner=ubuntu mode=0550 creates=true copy=no
+
+- name: create consul conf.d
+  file: path=/etc/consul.d state=directory
+
+- name: create consul data
+  file: path=/tmp/consul state=directory
+
+- name: add consul config file
+  template: src=../templates/consul_config.json.j2 dest=/etc/consul.d/01_config.json
+  notify:
+    - restart supervisor
+
+- name: add supervisor conf
+  copy: src=../files/supervisor_consul.conf dest=/etc/supervisor/conf.d/supervisor_consul.conf
+  notify:
+    - restart supervisor
+
+- name: start supervisor and consul
+  service: name=supervisor state=running enabled=yes
+
+- name: status
+  command: service supervisor status
+  register: status_it
+
+- debug: var=status_it

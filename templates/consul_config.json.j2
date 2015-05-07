@@ -1,0 +1,12 @@
+{
+  "datacenter": "{{ region }}",
+  "data_dir": "/tmp/consul",
+  "log_level": "{{ consul_loglevel }}",
+  "node_name": "{{ ansible_hostname }}",
+{% if consul_server %}
+  "server": true, 
+  "bootstrap_expect": {{ consul_qorum }},
+{% endif %}
+  "start_join": {{ join | to_json }},
+  "bind_addr": "{{ ansible_eth1.ipv4.address }}"
+}
