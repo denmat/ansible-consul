@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: DenMat
+  license: MIT
+  min_ansible_version: 1.6
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+
+  categories:
+    - discovery
+    - system
+dependencies: []
+version: 1.0.0
