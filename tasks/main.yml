@@ -32,3 +32,9 @@
   register: status_it
 
 - debug: var=status_it
+
+- name: fetch vault
+  get_url: url={{ vault_url }} dest=/tmp/{{ vault_package }} mode=0440
+
+- name: install vault to /usr/local/bin
+  unarchive: src=/tmp/{{ vault_package }} dest=/usr/local/bin owner=ubuntu mode=0550 creates=true copy=no 
